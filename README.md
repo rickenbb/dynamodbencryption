@@ -1,5 +1,9 @@
 # DynamoDB Client-Side Encryption Demo
 
+## DISCLAIMER
+- Repo is mostly AI generated
+- Use at your own risk and for educational purposes only!
+
 ## Prerequisites
 - Terraform 1.4 or newer.
 - Python 3.9+ with `pip`.
