@@ -10,9 +10,7 @@
 # 1. Provision infrastructure (creates KMS keys, DynamoDB table, demo IAM users, and ../.env)
 cd terraform
 terraform init
-terraform apply \
-  -var="aws_region=us-east-1" \
-  -var="table_name=dynamodb-encryption-demo"
+terraform apply
 
 # 2. Activate an AWS identity with KMS access (use the FULL_USER_NAME from the Terraform outputs/.env)
 aws sts get-caller-identity
@@ -33,7 +31,5 @@ python demo.py
 ## Clean Up
 ```bash
 cd terraform
-terraform destroy \
-  -var="aws_region=us-east-1" \
-  -var="table_name=dynamodb-encryption-demo"
+terraform destroy
 ```

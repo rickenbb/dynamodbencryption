@@ -10,6 +10,10 @@ terraform {
       source  = "hashicorp/local"
       version = ">= 2.4.0"
     }
+    random = {
+      source  = "hashicorp/random"
+      version = ">= 3.5.1"
+    }
   }
 }
 
@@ -67,8 +71,8 @@ resource "aws_dynamodb_table" "demo" {
 
 data "aws_iam_policy_document" "dynamodb_table_access" {
   statement {
-    sid       = "DynamoDBTableCRUD"
-    actions   = ["dynamodb:DescribeTable", "dynamodb:GetItem", "dynamodb:PutItem", "dynamodb:Query", "dynamodb:Scan", "dynamodb:UpdateItem", "dynamodb:DeleteItem","dynamodb:ListTables"]
+    sid       = "DynamoDBFullAccess"
+    actions   = ["dynamodb:*"]
     resources = ["*"]
   }
 }
@@ -102,9 +106,12 @@ resource "aws_iam_user" "demo_full" {
   name = var.iam_full_user_name
 }
 
+
 resource "aws_iam_user" "demo_limited" {
   name = var.iam_limited_user_name
 }
+
+
 
 resource "aws_iam_user_policy_attachment" "full_table" {
   user       = aws_iam_user.demo_full.name
@@ -119,6 +126,16 @@ resource "aws_iam_user_policy_attachment" "full_storage_kms" {
 resource "aws_iam_user_policy_attachment" "limited_table" {
   user       = aws_iam_user.demo_limited.name
   policy_arn = aws_iam_policy.dynamodb_table_access.arn
+}
+
+resource "aws_iam_user_login_profile" "demo_full" {
+  user                    = aws_iam_user.demo_full.name
+  password_reset_required = true
+}
+
+resource "aws_iam_user_login_profile" "demo_limited" {
+  user                    = aws_iam_user.demo_limited.name
+  password_reset_required = true
 }
 
 resource "local_file" "python_env" {
